@@ -18,14 +18,19 @@ namespace BSReshaper
     /// </summary>
     public partial class BSReshaper : Form
     {
+        private bool folderSelected;
+        private bool xslSelected;
+        private static readonly string debugDefaultPath = @"D:\Documents\BattleScribe\data\wh40k\";
         public BSReshaper()
         {
+            folderSelected = xslSelected = false;
             InitializeComponent();
         }
 
         private void folderSelectButton_Click(object sender, EventArgs e)
         {
-            if (folderBrowserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            folderSelected = folderBrowserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK;
+            if (folderSelected)
             {
                 folderLabel.Text = "Selected: " + folderBrowserDialog.SelectedPath;
             }
@@ -39,7 +44,8 @@ namespace BSReshaper
         {
             var path = folderBrowserDialog.SelectedPath;
 #if DEBUG
-            path = @"D:\Documents\BattleScribe\data\wh40k\";
+            path = debugDefaultPath;
+            log("DEBUG loading gst from: " + path);
 #endif
             log("# Operating in:");
             log(path);
@@ -63,7 +69,8 @@ namespace BSReshaper
         {
             var path = folderBrowserDialog.SelectedPath;
 #if DEBUG
-            path = @"D:\Documents\BattleScribe\data\wh40k\";
+            path = debugDefaultPath;
+            log("DEBUG loading cats from: " + path);
 #endif
             log("# Operating in:");
             log(path);
@@ -80,6 +87,17 @@ namespace BSReshaper
 
         private void startButton_Click(object sender, EventArgs e)
         {
+#if DEBUG
+            folderSelected = true;
+#endif
+            if (!folderSelected)
+            {
+                log("No folder selected.");
+                return;
+            }
+#if DEBUG
+            folderSelected = false;
+#endif
             string gstPath = getGstPath();
             if (gstPath == null)
             {
@@ -97,13 +115,13 @@ namespace BSReshaper
 
         private void transformButton_Click(object sender, EventArgs e)
         {
-            var transformer = new System.Xml.Xsl.XslCompiledTransform();
-            var xsltPath = chooseXsltDialog.FileName;
-            if (!chooseXsltDialog.CheckFileExists)
+            if (!xslSelected)
             {
                 log("XSL file not selected.");
+                return;
             }
-            transformer.Load(xsltPath);
+            var transformer = new System.Xml.Xsl.XslCompiledTransform();
+            transformer.Load(chooseXsltDialog.FileName);
             var paths = getCatPaths();
             paths.Add(getGstPath());
             foreach (var path in paths)
@@ -115,7 +133,8 @@ namespace BSReshaper
 
         private void loadXsltButton_Click(object sender, EventArgs e)
         {
-            if (chooseXsltDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            xslSelected = chooseXsltDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK;
+            if (xslSelected)
             {
                 xsltLabel.Text = "Selected: " + chooseXsltDialog.FileName;
             }
