@@ -104,7 +104,7 @@ namespace BSReshaper
                 return;
             }
             Reshaper reshaper = new Reshaper(gstPath, getCatPaths(), log);
-            reshaper.RegenerateIds();
+            Task.Run(new Action(reshaper.RegenerateIds));
         }
 
         private void log(string logText)

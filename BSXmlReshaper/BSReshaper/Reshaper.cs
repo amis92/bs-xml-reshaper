@@ -54,6 +54,7 @@ namespace BSReshaper
                 log("# Replaced occurences in:");
                 log(catPath);
             }
+            log("# Regenerating completed.");
         }
 
         /// <summary>
