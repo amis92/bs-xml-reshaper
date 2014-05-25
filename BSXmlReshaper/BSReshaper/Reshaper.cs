@@ -97,9 +97,9 @@ namespace BSReshaper
                 string newId;
                 do
                 {
-                    newId = new Guid().ToString();
+                    newId = Guid.NewGuid().ToString();
                 }
-                while (dict.ContainsValue(newId));
+                while (dict.ContainsValue(newId) || dict.ContainsKey(newId));
                 dict.Add(id, newId);
                 log("# changing: " + id);
                 log("# into:     " + newId);
