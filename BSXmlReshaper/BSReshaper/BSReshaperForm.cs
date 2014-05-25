@@ -120,15 +120,25 @@ namespace BSReshaper
                 log("XSL file not selected.");
                 return;
             }
-            var transformer = new System.Xml.Xsl.XslCompiledTransform();
-            transformer.Load(chooseXsltDialog.FileName);
-            var paths = getCatPaths();
-            paths.Add(getGstPath());
-            foreach (var path in paths)
+            Task.Run(new Action(() =>
             {
-                transformer.Transform(path, path);
-                log("Transformed: " + path);
-            }
+                var transformer = new System.Xml.Xsl.XslCompiledTransform();
+                transformer.Load(chooseXsltDialog.FileName);
+                var paths = getCatPaths();
+                paths.Add(getGstPath());
+                foreach (var path in paths)
+                {
+                    using (var stream = new MemoryStream())
+                    {
+                        transformer.Transform(path, null, stream);
+                        using (FileStream file = File.OpenWrite(path))
+                        {
+                            stream.WriteTo(file);
+                        }
+                        log("Transformed: " + path);
+                    }
+                }
+            }));
         }
 
         private void loadXsltButton_Click(object sender, EventArgs e)
