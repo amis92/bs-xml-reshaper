@@ -118,7 +118,7 @@ namespace BSReshaper
             string contents = File.ReadAllText(filePath);
             foreach (var pair in dict)
             {
-                contents.Replace(pair.Key, pair.Value);
+                contents = contents.Replace(pair.Key, pair.Value);
             }
             File.WriteAllText(filePath, contents);
         }
