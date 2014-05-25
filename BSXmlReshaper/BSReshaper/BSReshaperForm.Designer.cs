@@ -34,18 +34,18 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.logBoxFrame = new System.Windows.Forms.GroupBox();
             this.logBox = new System.Windows.Forms.TextBox();
-            this.startButton = new System.Windows.Forms.Button();
-            this.loadXsltButton = new System.Windows.Forms.Button();
-            this.xsltLabel = new System.Windows.Forms.Label();
-            this.transformButton = new System.Windows.Forms.Button();
-            this.chooseXsltDialog = new System.Windows.Forms.OpenFileDialog();
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
+            this.closeButton = new System.Windows.Forms.Button();
+            this.startButton = new System.Windows.Forms.Button();
+            this.transformButton = new System.Windows.Forms.Button();
+            this.saveLogButton = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
-            this.closeButton = new System.Windows.Forms.Button();
+            this.loadXsltButton = new System.Windows.Forms.Button();
+            this.xsltLabel = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.saveLogButton = new System.Windows.Forms.Button();
+            this.chooseXsltDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveLogDialog = new System.Windows.Forms.SaveFileDialog();
             this.tableLayoutPanel1.SuspendLayout();
             this.logBoxFrame.SuspendLayout();
@@ -127,50 +127,6 @@
             this.logBox.Size = new System.Drawing.Size(532, 348);
             this.logBox.TabIndex = 3;
             // 
-            // startButton
-            // 
-            this.startButton.Location = new System.Drawing.Point(351, 3);
-            this.startButton.Name = "startButton";
-            this.startButton.Size = new System.Drawing.Size(103, 23);
-            this.startButton.TabIndex = 4;
-            this.startButton.Text = "Regenerate IDs";
-            this.startButton.UseVisualStyleBackColor = true;
-            this.startButton.Click += new System.EventHandler(this.startButton_Click);
-            // 
-            // loadXsltButton
-            // 
-            this.loadXsltButton.Location = new System.Drawing.Point(3, 3);
-            this.loadXsltButton.Name = "loadXsltButton";
-            this.loadXsltButton.Size = new System.Drawing.Size(87, 23);
-            this.loadXsltButton.TabIndex = 0;
-            this.loadXsltButton.Text = "Choose XSLT";
-            this.loadXsltButton.UseVisualStyleBackColor = true;
-            this.loadXsltButton.Click += new System.EventHandler(this.loadXsltButton_Click);
-            // 
-            // xsltLabel
-            // 
-            this.xsltLabel.AutoSize = true;
-            this.xsltLabel.Location = new System.Drawing.Point(98, 5);
-            this.xsltLabel.Margin = new System.Windows.Forms.Padding(5);
-            this.xsltLabel.Name = "xsltLabel";
-            this.xsltLabel.Size = new System.Drawing.Size(98, 13);
-            this.xsltLabel.TabIndex = 1;
-            this.xsltLabel.Text = "(no XSLT selected)";
-            // 
-            // transformButton
-            // 
-            this.transformButton.Location = new System.Drawing.Point(258, 3);
-            this.transformButton.Name = "transformButton";
-            this.transformButton.Size = new System.Drawing.Size(87, 23);
-            this.transformButton.TabIndex = 2;
-            this.transformButton.Text = "Transform";
-            this.transformButton.UseVisualStyleBackColor = true;
-            this.transformButton.Click += new System.EventHandler(this.transformButton_Click);
-            // 
-            // chooseXsltDialog
-            // 
-            this.chooseXsltDialog.Filter = "XSLT files|*.xslt|XML files|*.xml";
-            // 
             // flowLayoutPanel4
             // 
             this.tableLayoutPanel1.SetColumnSpan(this.flowLayoutPanel4, 2);
@@ -184,6 +140,46 @@
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
             this.flowLayoutPanel4.Size = new System.Drawing.Size(538, 28);
             this.flowLayoutPanel4.TabIndex = 8;
+            // 
+            // closeButton
+            // 
+            this.closeButton.Location = new System.Drawing.Point(460, 3);
+            this.closeButton.Name = "closeButton";
+            this.closeButton.Size = new System.Drawing.Size(75, 23);
+            this.closeButton.TabIndex = 5;
+            this.closeButton.Text = "Close";
+            this.closeButton.UseVisualStyleBackColor = true;
+            this.closeButton.Click += new System.EventHandler(this.closeButton_Click);
+            // 
+            // startButton
+            // 
+            this.startButton.Location = new System.Drawing.Point(351, 3);
+            this.startButton.Name = "startButton";
+            this.startButton.Size = new System.Drawing.Size(103, 23);
+            this.startButton.TabIndex = 4;
+            this.startButton.Text = "Regenerate IDs";
+            this.startButton.UseVisualStyleBackColor = true;
+            this.startButton.Click += new System.EventHandler(this.startButton_Click);
+            // 
+            // transformButton
+            // 
+            this.transformButton.Location = new System.Drawing.Point(258, 3);
+            this.transformButton.Name = "transformButton";
+            this.transformButton.Size = new System.Drawing.Size(87, 23);
+            this.transformButton.TabIndex = 2;
+            this.transformButton.Text = "Transform";
+            this.transformButton.UseVisualStyleBackColor = true;
+            this.transformButton.Click += new System.EventHandler(this.transformButton_Click);
+            // 
+            // saveLogButton
+            // 
+            this.saveLogButton.Location = new System.Drawing.Point(177, 3);
+            this.saveLogButton.Name = "saveLogButton";
+            this.saveLogButton.Size = new System.Drawing.Size(75, 23);
+            this.saveLogButton.TabIndex = 6;
+            this.saveLogButton.Text = "Save Log";
+            this.saveLogButton.UseVisualStyleBackColor = true;
+            this.saveLogButton.Click += new System.EventHandler(this.saveLogButton_Click);
             // 
             // groupBox2
             // 
@@ -207,15 +203,25 @@
             this.flowLayoutPanel2.Size = new System.Drawing.Size(532, 35);
             this.flowLayoutPanel2.TabIndex = 0;
             // 
-            // closeButton
+            // loadXsltButton
             // 
-            this.closeButton.Location = new System.Drawing.Point(460, 3);
-            this.closeButton.Name = "closeButton";
-            this.closeButton.Size = new System.Drawing.Size(75, 23);
-            this.closeButton.TabIndex = 5;
-            this.closeButton.Text = "Close";
-            this.closeButton.UseVisualStyleBackColor = true;
-            this.closeButton.Click += new System.EventHandler(this.closeButton_Click);
+            this.loadXsltButton.Location = new System.Drawing.Point(3, 3);
+            this.loadXsltButton.Name = "loadXsltButton";
+            this.loadXsltButton.Size = new System.Drawing.Size(87, 23);
+            this.loadXsltButton.TabIndex = 0;
+            this.loadXsltButton.Text = "Choose XSLT";
+            this.loadXsltButton.UseVisualStyleBackColor = true;
+            this.loadXsltButton.Click += new System.EventHandler(this.loadXsltButton_Click);
+            // 
+            // xsltLabel
+            // 
+            this.xsltLabel.AutoSize = true;
+            this.xsltLabel.Location = new System.Drawing.Point(98, 5);
+            this.xsltLabel.Margin = new System.Windows.Forms.Padding(5);
+            this.xsltLabel.Name = "xsltLabel";
+            this.xsltLabel.Size = new System.Drawing.Size(98, 13);
+            this.xsltLabel.TabIndex = 1;
+            this.xsltLabel.Text = "(no XSLT selected)";
             // 
             // groupBox3
             // 
@@ -239,15 +245,9 @@
             this.flowLayoutPanel1.Size = new System.Drawing.Size(532, 31);
             this.flowLayoutPanel1.TabIndex = 0;
             // 
-            // saveLogButton
+            // chooseXsltDialog
             // 
-            this.saveLogButton.Location = new System.Drawing.Point(177, 3);
-            this.saveLogButton.Name = "saveLogButton";
-            this.saveLogButton.Size = new System.Drawing.Size(75, 23);
-            this.saveLogButton.TabIndex = 6;
-            this.saveLogButton.Text = "Save Log";
-            this.saveLogButton.UseVisualStyleBackColor = true;
-            this.saveLogButton.Click += new System.EventHandler(this.saveLogButton_Click);
+            this.chooseXsltDialog.Filter = "XSL files|*.xsl|XML files|*.xml";
             // 
             // saveLogDialog
             // 
