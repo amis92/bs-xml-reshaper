@@ -40,8 +40,6 @@
             this.transformButton = new System.Windows.Forms.Button();
             this.chooseXsltDialog = new System.Windows.Forms.OpenFileDialog();
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.closeButton = new System.Windows.Forms.Button();
@@ -52,7 +50,6 @@
             this.tableLayoutPanel1.SuspendLayout();
             this.logBoxFrame.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -92,7 +89,6 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.90141F));
             this.tableLayoutPanel1.Controls.Add(this.logBoxFrame, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.flowLayoutPanel4, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.groupBox1, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.groupBox2, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.groupBox3, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -167,7 +163,7 @@
             this.transformButton.Name = "transformButton";
             this.transformButton.Size = new System.Drawing.Size(87, 23);
             this.transformButton.TabIndex = 2;
-            this.transformButton.Text = "Transfrom";
+            this.transformButton.Text = "Transform";
             this.transformButton.UseVisualStyleBackColor = true;
             this.transformButton.Click += new System.EventHandler(this.transformButton_Click);
             // 
@@ -189,32 +185,14 @@
             this.flowLayoutPanel4.Size = new System.Drawing.Size(538, 28);
             this.flowLayoutPanel4.TabIndex = 8;
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.progressBar1);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(319, 432);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(222, 54);
-            this.groupBox1.TabIndex = 9;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Progress";
-            // 
-            // progressBar1
-            // 
-            this.progressBar1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.progressBar1.Location = new System.Drawing.Point(3, 16);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(216, 35);
-            this.progressBar1.TabIndex = 0;
-            // 
             // groupBox2
             // 
+            this.tableLayoutPanel1.SetColumnSpan(this.groupBox2, 2);
             this.groupBox2.Controls.Add(this.flowLayoutPanel2);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox2.Location = new System.Drawing.Point(3, 432);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(310, 54);
+            this.groupBox2.Size = new System.Drawing.Size(538, 54);
             this.groupBox2.TabIndex = 10;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Transformation";
@@ -226,7 +204,7 @@
             this.flowLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel2.Location = new System.Drawing.Point(3, 16);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            this.flowLayoutPanel2.Size = new System.Drawing.Size(304, 35);
+            this.flowLayoutPanel2.Size = new System.Drawing.Size(532, 35);
             this.flowLayoutPanel2.TabIndex = 0;
             // 
             // closeButton
@@ -249,7 +227,7 @@
             this.groupBox3.Size = new System.Drawing.Size(538, 50);
             this.groupBox3.TabIndex = 11;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "groupBox3";
+            this.groupBox3.Text = "Folder selection";
             // 
             // flowLayoutPanel1
             // 
@@ -290,7 +268,6 @@
             this.logBoxFrame.ResumeLayout(false);
             this.logBoxFrame.PerformLayout();
             this.flowLayoutPanel4.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.flowLayoutPanel2.ResumeLayout(false);
             this.flowLayoutPanel2.PerformLayout();
@@ -316,8 +293,6 @@
         private System.Windows.Forms.OpenFileDialog chooseXsltDialog;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
         private System.Windows.Forms.Button closeButton;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;
         private System.Windows.Forms.GroupBox groupBox3;
