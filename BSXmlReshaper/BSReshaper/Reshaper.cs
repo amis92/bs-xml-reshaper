@@ -47,9 +47,12 @@ namespace BSReshaper
             var dict = regenerateIds(set);
             // switching
             switchIds(dict, gstPath);
+            log("# replaced all occurences in gst file");
             foreach (string catPath in cataloguePaths)
             {
                 switchIds(dict, catPath);
+                log("# Replaced occurences in:");
+                log(catPath);
             }
         }
 
@@ -95,8 +98,11 @@ namespace BSReshaper
                 do
                 {
                     newId = new Guid().ToString();
-                } while (dict.ContainsValue(newId));
+                }
+                while (dict.ContainsValue(newId));
                 dict.Add(id, newId);
+                log("# changing: " + id);
+                log("# into:     " + newId);
             }
             return dict;
         }
