@@ -29,7 +29,7 @@ xmlns:bs-cat="http://www.battlescribe.net/schema/catalogueSchema">
 
   <!-- now all ids are switched to Walker's, we resort characteristics only in normal-walker-id nodes -->
   <!-- Walker resorting (Type <-> HP) -->
-  <xsl:template match="bs-cat:profile[@profileTypeId='725a358c-765b-498c-8de5-399fc0c0725f']/bs-cat:characteristics">
+  <xsl:template match="bs-cat:profile[@profileTypeId='3dadd2ff-33f1-41dd-85c7-bee5a7dfa413']/bs-cat:characteristics">
     <xsl:copy>
       <xsl:apply-templates select="bs-cat:characteristic[@name='WS']"/>
       <xsl:apply-templates select="bs-cat:characteristic[@name='BS']"/>
@@ -46,7 +46,7 @@ xmlns:bs-cat="http://www.battlescribe.net/schema/catalogueSchema">
   
   <!-- resorting in gst too -->
   <!-- Walker resorting (Type <-> HP) -->
-  <xsl:template match="bs-gst:profileType[@id='725a358c-765b-498c-8de5-399fc0c0725f']/bs-gst:characteristics">
+  <xsl:template match="bs-gst:profileType[@id='3dadd2ff-33f1-41dd-85c7-bee5a7dfa413']/bs-gst:characteristics">
     <xsl:copy>
       <xsl:apply-templates select="bs-gst:characteristic[@name='WS']"/>
       <xsl:apply-templates select="bs-gst:characteristic[@name='BS']"/>
