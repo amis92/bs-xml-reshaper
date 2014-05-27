@@ -18,6 +18,11 @@ namespace BSReshaper
     /// </summary>
     public partial class BSReshaper : Form
     {
+
+        // This delegate enables asynchronous calls for setting 
+        // the text property on a TextBox control. 
+        delegate void AppendTextCallback(string text);
+
         private bool folderSelected;
         private bool xslSelected;
         private static readonly string debugDefaultPath = @"D:\Documents\BattleScribe\data\wh40k\";
@@ -107,12 +112,6 @@ namespace BSReshaper
             Task.Run(new Action(reshaper.RegenerateIds));
         }
 
-        private void log(string logText)
-        {
-            logBox.AppendText(logText);
-            logBox.AppendText("\r\n");
-        }
-
         private void transformButton_Click(object sender, EventArgs e)
         {
             if (!xslSelected)
@@ -131,7 +130,7 @@ namespace BSReshaper
                     using (var stream = new MemoryStream())
                     {
                         transformer.Transform(path, null, stream);
-                        using (FileStream file = File.OpenWrite(path))
+                        using (FileStream file = File.Open(path, FileMode.Create))
                         {
                             stream.WriteTo(file);
                         }
@@ -165,6 +164,35 @@ namespace BSReshaper
             {
                 File.WriteAllText(saveLogDialog.FileName, logBox.Text);
             }
+        }
+
+        // If the calling thread is different from the thread that 
+        // created the TextBox control, this method creates a 
+        // SetTextCallback and calls itself asynchronously using the 
+        // Invoke method. 
+        // 
+        // If the calling thread is the same as the thread that created 
+        // the TextBox control, the Text property is set directly.  
+        private void log(string text)
+        {
+            // InvokeRequired required compares the thread ID of the 
+            // calling thread to the thread ID of the creating thread. 
+            // If these threads are different, it returns true. 
+            if (this.logBox.InvokeRequired)
+            {
+                AppendTextCallback d = new AppendTextCallback(log);
+                this.Invoke(d, new object[] { text });
+            }
+            else
+            {
+                AppendText(text);
+            }
+        }
+
+        private void AppendText(string logText)
+        {
+            logBox.AppendText(logText);
+            logBox.AppendText("\r\n");
         }
     }
 }
