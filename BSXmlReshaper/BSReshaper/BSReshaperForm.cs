@@ -112,7 +112,10 @@ namespace BSReshaper
                 return;
             }
             Reshaper reshaper = new Reshaper(gstPath, getCatPaths(), log);
-            Task.Run(new Action(reshaper.RegenerateIds));
+            Task.Run(new Action(() => {
+                reshaper.RegenerateIds();
+                saveXsltThreadSafe(reshaper);
+            }));
         }
 
         private void transformButton_Click(object sender, EventArgs e)
