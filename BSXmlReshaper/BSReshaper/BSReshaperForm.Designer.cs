@@ -47,6 +47,7 @@
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.chooseXsltDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveLogDialog = new System.Windows.Forms.SaveFileDialog();
+            this.saveXslDialog = new System.Windows.Forms.SaveFileDialog();
             this.tableLayoutPanel1.SuspendLayout();
             this.logBoxFrame.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
@@ -256,6 +257,12 @@
             this.saveLogDialog.Filter = "Text files|*.txt|Log files|*.log";
             this.saveLogDialog.Title = "Save Log";
             // 
+            // saveXslDialog
+            // 
+            this.saveXslDialog.DefaultExt = "xsl";
+            this.saveXslDialog.FileName = "Game System id transformation";
+            this.saveXslDialog.Title = "Save XSL file for future transformations";
+            // 
             // BSReshaper
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -299,6 +306,7 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Button saveLogButton;
         private System.Windows.Forms.SaveFileDialog saveLogDialog;
+        private System.Windows.Forms.SaveFileDialog saveXslDialog;
     }
 }
 

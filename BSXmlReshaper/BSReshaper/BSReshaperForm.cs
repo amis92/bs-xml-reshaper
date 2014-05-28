@@ -119,7 +119,7 @@ namespace BSReshaper
                 log("XSL file not selected.");
                 return;
             }
-            Task.Run(new Action(() =>
+            var task = Task.Run(new Action(() =>
             {
                 var transformer = new System.Xml.Xsl.XslCompiledTransform();
                 transformer.Load(chooseXsltDialog.FileName);
@@ -177,10 +177,10 @@ namespace BSReshaper
         // the TextBox control, the Text property is set directly.  
         private void log(string text)
         {
-            // InvokeRequired required compares the thread ID of the 
+            // InvokeRequired compares the thread ID of the 
             // calling thread to the thread ID of the creating thread. 
             // If these threads are different, it returns true. 
-            if (this.logBox.InvokeRequired)
+            if (this.InvokeRequired)
             {
                 AppendTextCallback d = new AppendTextCallback(log);
                 this.Invoke(d, new object[] { text });
@@ -195,6 +195,16 @@ namespace BSReshaper
         {
             logBox.AppendText(logText);
             logBox.AppendText("\r\n");
+        }
+
+        private void saveXslt(Reshaper reshaper)
+        {
+            if (saveXslDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                File.WriteAllText(saveXslDialog.FileName, reshaper.ReshapingXSL.ToString());
+                log("XSLT saved as:");
+                log(saveXslDialog.FileName);
+            }
         }
     }
 }

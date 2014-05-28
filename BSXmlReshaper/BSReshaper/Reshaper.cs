@@ -18,9 +18,18 @@ namespace BSReshaper
     /// </summary>
     public sealed class Reshaper
     {
+        private Dictionary<string, string> idOldNewDict;
         private readonly string gstPath;
         private readonly List<string> cataloguePaths;
         private readonly Action<string> log;
+
+        public readonly XDocument ReshapingXSL
+        {
+            get
+            {
+                return null;
+            }
+        }
 
         public Reshaper(string gstPath, List<string> catPaths, Action<string> log)
         {
@@ -126,6 +135,41 @@ namespace BSReshaper
                 contents = contents.Replace(pair.Key, pair.Value);
             }
             File.WriteAllText(filePath, contents);
+        }
+
+        /// <summary>
+        /// Warning! This should not be called before idOldNewDict isn't initialized.
+        /// </summary>
+        /// <returns></returns>
+        private XDocument generateXslt()
+        {
+            if (idOldNewDict == null)
+            {
+                throw new InvalidDataException("No isOldNewDict found.");
+            }
+            StringBuilder docBuilder = new StringBuilder();
+            docBuilder.AppendLine(@"<?xml version=""1.0"" encoding=""UTF-8""?>");
+            docBuilder.AppendLine(@"<xsl:stylesheet version=""1.0"" xmlns:xsl=""http://www.w3.org/1999/XSL/Transform"">");
+            docBuilder.AppendLine(@"  <xsl:output omit-xml-declaration=""no"" encoding=""UTF-8"" standalone=""yes"" version=""1.0"" indent=""yes"" method=""xml""/>");
+            docBuilder.AppendLine();
+            docBuilder.AppendLine(@"<!-- The Identity Transformation -->");
+            docBuilder.AppendLine(@"<!-- Whenever you match any node or any attribute -->");
+            docBuilder.AppendLine(@"<xsl:template match=""node()|@*"">");
+            docBuilder.AppendLine(@"    <!-- Copy the current node -->");
+            docBuilder.AppendLine(@"    <xsl:copy>");
+            docBuilder.AppendLine(@"      <!-- Including any attributes it has and any child nodes -->");
+            docBuilder.AppendLine(@"      <xsl:apply-templates select=""@*|node()""/>");
+            docBuilder.AppendLine(@"    </xsl:copy>");
+            docBuilder.AppendLine(@"  </xsl:template>");
+            foreach (var pair in idOldNewDict) {
+            docBuilder.AppendLine();
+            docBuilder.AppendLine(@"  <xsl:template match=""@*[.='{0}']"">");
+            docBuilder.AppendLine(@"    <xsl:attribute name=""{{name()}}"" namespace=""{{namespace-uri()}}"">{1}</xsl:attribute>");
+            docBuilder.AppendLine(@"  </xsl:template>");
+            }
+            docBuilder.AppendLine();
+            docBuilder.AppendLine(@"</xsl:stylesheet>");
+            return XDocument.Parse(docBuilder.ToString());
         }
     }
 }

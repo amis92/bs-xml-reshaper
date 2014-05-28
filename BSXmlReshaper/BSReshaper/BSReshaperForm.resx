@@ -126,4 +126,7 @@
   <metadata name="saveLogDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>326, 17</value>
   </metadata>
+  <metadata name="saveXslDialog.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>457, 17</value>
+  </metadata>
 </root>
