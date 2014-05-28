@@ -22,6 +22,7 @@ namespace BSReshaper
         // This delegate enables asynchronous calls for setting 
         // the text property on a TextBox control. 
         delegate void AppendTextCallback(string text);
+        delegate void SaveXsltCallback(Reshaper reshaper);
 
         private bool folderSelected;
         private bool xslSelected;
@@ -197,6 +198,19 @@ namespace BSReshaper
         {
             logBox.AppendText(logText);
             logBox.AppendText("\r\n");
+        }
+
+        private void saveXsltThreadSafe(Reshaper reshaper)
+        {
+            if (this.InvokeRequired)
+            {
+                SaveXsltCallback d = new SaveXsltCallback(saveXslt);
+                this.Invoke(d, new object[] { reshaper });
+            }
+            else
+            {
+                saveXslt(reshaper);
+            }
         }
 
         private void saveXslt(Reshaper reshaper)
