@@ -125,6 +125,7 @@ namespace BSReshaper
                 transformer.Load(chooseXsltDialog.FileName);
                 var paths = getCatPaths();
                 paths.Add(getGstPath());
+                log("Transforming...");
                 foreach (var path in paths)
                 {
                     using (var stream = new MemoryStream())
@@ -134,9 +135,10 @@ namespace BSReshaper
                         {
                             stream.WriteTo(file);
                         }
-                        log("Transformed: " + path);
+                        log("# Transformed: " + path);
                     }
                 }
+                log("Completed.");
             }));
         }
 

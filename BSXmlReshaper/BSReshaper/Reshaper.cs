@@ -37,24 +37,28 @@ namespace BSReshaper
         public void RegenerateIds()
         {
             // setup
+            log("Setting up Reshaper...");
             XDocument gst = XDocument.Load(gstPath);
             XNamespace ns = gst.Root.GetDefaultNamespace();
             var set = new HashSet<string>();
+            log("Set-up. Searching gst for distinct ids...");
             // finding ids
             set.UnionWith(findDistinctIds(ns + "category", gst.Root));
             set.UnionWith(findDistinctIds(ns + "characteristic", gst.Root));
             set.UnionWith(findDistinctIds(ns + "profileType", gst.Root));
+            log("Finished. Re-generating ids.");
             var dict = regenerateIds(set);
+            log("Re-generated. Replacing in gst...");
             // switching
             switchIds(dict, gstPath);
-            log("# replaced all occurences in gst file");
+            log("Replaced all occurences in gst file. Replacing in catalogues...");
             foreach (string catPath in cataloguePaths)
             {
                 switchIds(dict, catPath);
                 log("# Replaced occurences in:");
                 log(catPath);
             }
-            log("# Regenerating completed.");
+            log("Replacing completed.");
         }
 
         /// <summary>
