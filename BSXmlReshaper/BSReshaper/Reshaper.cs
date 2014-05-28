@@ -23,11 +23,11 @@ namespace BSReshaper
         private readonly List<string> cataloguePaths;
         private readonly Action<string> log;
 
-        public readonly XDocument ReshapingXSL
+        public XDocument ReshapingXSL
         {
             get
             {
-                return null;
+                return generateXslt();
             }
         }
 
@@ -56,14 +56,14 @@ namespace BSReshaper
             set.UnionWith(findDistinctIds(ns + "characteristic", gst.Root));
             set.UnionWith(findDistinctIds(ns + "profileType", gst.Root));
             log("Finished. Re-generating ids.");
-            var dict = regenerateIds(set);
+            idOldNewDict = regenerateIds(set);
             log("Re-generated. Replacing in gst...");
             // switching
-            switchIds(dict, gstPath);
+            switchIds(idOldNewDict, gstPath);
             log("Replaced all occurences in gst file. Replacing in catalogues...");
             foreach (string catPath in cataloguePaths)
             {
-                switchIds(dict, catPath);
+                switchIds(idOldNewDict, catPath);
                 log("# Replaced occurences in:");
                 log(catPath);
             }

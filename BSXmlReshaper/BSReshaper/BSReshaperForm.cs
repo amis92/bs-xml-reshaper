@@ -25,7 +25,9 @@ namespace BSReshaper
 
         private bool folderSelected;
         private bool xslSelected;
+#if DEBUG
         private static readonly string debugDefaultPath = @"D:\Documents\BattleScribe\data\wh40k\";
+#endif
         public BSReshaper()
         {
             folderSelected = xslSelected = false;
