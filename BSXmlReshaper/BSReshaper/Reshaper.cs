@@ -163,8 +163,10 @@ namespace BSReshaper
             docBuilder.AppendLine(@"  </xsl:template>");
             foreach (var pair in idOldNewDict) {
             docBuilder.AppendLine();
-            docBuilder.AppendLine(@"  <xsl:template match=""@*[.='{0}']"">");
-            docBuilder.AppendLine(@"    <xsl:attribute name=""{{name()}}"" namespace=""{{namespace-uri()}}"">{1}</xsl:attribute>");
+            docBuilder.AppendLine(
+                    String.Format(@"  <xsl:template match=""@*[.='{0}']"">", pair.Key));
+            docBuilder.AppendLine(
+                    String.Format(@"    <xsl:attribute name=""{{name()}}"" namespace=""{{namespace-uri()}}"">{0}</xsl:attribute>", pair.Value));
             docBuilder.AppendLine(@"  </xsl:template>");
             }
             docBuilder.AppendLine();
