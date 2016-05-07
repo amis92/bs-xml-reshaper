@@ -51,7 +51,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>46B54D91A30CD81BAAEC236FFD5924DB79D2A28A</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>B5164D1CDE5A5FEF2CF65CA078DBEBDFF84EB683</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>BSReshaper_TemporaryKey.pfx</ManifestKeyFile>
@@ -60,7 +60,7 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
