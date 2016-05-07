@@ -7,7 +7,6 @@
     using System.Threading.Tasks;
     using System.Windows.Forms;
     using System.Xml.Xsl;
-    using BSReshaperLib;
 
     // ReSharper disable LocalizableElement
 
@@ -82,6 +81,7 @@
 
         private List<string> GetFilePaths(bool requireSingleGameSystem)
         {
+            Log($"# Operating in '{FolderPath}'");
             var gameSystemPaths = GetFilePathsForExtension(".gst");
             if (requireSingleGameSystem && gameSystemPaths.Count != 1)
             {
@@ -95,7 +95,6 @@
 
         private List<string> GetFilePathsForExtension(string extension)
         {
-            Log($"# Operating in '{FolderPath}'");
             var paths = Directory.GetFiles(FolderPath, $"*{extension}").ToList();
             var zipped = paths.Where(x => x.EndsWith("z")).ToList();
             if (zipped.Count > 0)
@@ -113,6 +112,7 @@
             {
                 Log($"#  * {path}");
             }
+            Log("#");
             return paths;
         }
 
@@ -158,7 +158,6 @@
                     {
                         stream.Position = 0;
                         stream.CopyFormattedAsBattleScribeTo(file);
-                        //stream.WriteTo(file);
                     }
                     Log("# Transformed: " + path);
                 }

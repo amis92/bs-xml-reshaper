@@ -1,4 +1,4 @@
-﻿namespace BSReshaperLib
+﻿namespace BSReshaper
 {
     using System.IO;
     using System.Text;
@@ -14,8 +14,8 @@
                 xmlFormatted = reader.ReadToEnd();
             }
             // format header
-            xmlFormatted = xmlFormatted.Replace(
-                @"<?xml version=""1.0"" encoding=""utf-8""?>",
+            xmlFormatted = Regex.Replace(xmlFormatted,
+                @"<\?xml version=""1\.0"" encoding=""utf-8""( standalone=""yes"")?\?>",
                 @"<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes""?>");
             // format ElementEnds
             xmlFormatted = xmlFormatted.Replace(" />", "/>");
