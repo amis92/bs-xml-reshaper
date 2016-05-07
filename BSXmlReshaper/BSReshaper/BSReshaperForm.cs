@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
     using System.Windows.Forms;
     using System.Xml.Xsl;
+    using BSReshaperLib;
 
     // ReSharper disable LocalizableElement
 
@@ -155,7 +156,9 @@
                     transformer.Transform(path, null, stream);
                     using (var file = File.Open(path, FileMode.Create))
                     {
-                        stream.WriteTo(file);
+                        stream.Position = 0;
+                        stream.CopyFormattedAsBattleScribeTo(file);
+                        //stream.WriteTo(file);
                     }
                     Log("# Transformed: " + path);
                 }
