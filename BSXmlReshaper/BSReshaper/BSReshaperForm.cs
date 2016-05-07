@@ -1,178 +1,252 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace BSReshaper
+﻿namespace BSReshaper
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Windows.Forms;
+    using System.Xml.Xsl;
+
+    // ReSharper disable LocalizableElement
+
     /// <summary>
-    /// Author: Amadeusz Sadowski
-    /// Original source:
-    /// <see cref="!:https://github.com/amis92/bs-xml-reshaper" />
+    ///     Author: Amadeusz Sadowski
+    ///     Original source:
+    ///     <see cref="!:https://github.com/amis92/bs-xml-reshaper" />
     /// </summary>
-    public partial class BSReshaper : Form
+    public partial class BsReshaper : Form
     {
-
-        // This delegate enables asynchronous calls for setting 
-        // the text property on a TextBox control. 
-        delegate void AppendTextCallback(string text);
-        delegate void SaveXsltCallback(Reshaper reshaper);
-
-        private bool folderSelected;
-        private bool xslSelected;
 #if DEBUG
-        private static readonly string debugDefaultPath = @"D:\Documents\BattleScribe\data\wh40k\";
+        private const string DebugDefaultPath = @"C:\Users\Amadeusz\BattleScribe\data\wh40k\";
 #endif
-        public BSReshaper()
+
+        public BsReshaper()
         {
-            folderSelected = xslSelected = false;
             InitializeComponent();
         }
 
-        private void folderSelectButton_Click(object sender, EventArgs e)
+        private string FolderPath { get; set; }
+
+        private bool IsFolderSelected { get; set; }
+
+        private bool IsXslSelected { get; set; }
+
+        private string XsltPath { get; set; }
+
+        protected override void OnLoad(EventArgs e)
         {
-            folderSelected = folderBrowserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK;
-            if (folderSelected)
+            base.OnLoad(e);
+            UpdateFolderPath(null);
+        }
+
+        private void UpdateFolderPath(string path)
+        {
+            FolderPath = path;
+            if (!IsFolderSelected)
             {
-                folderLabel.Text = "Selected: " + folderBrowserDialog.SelectedPath;
+                FolderPath = Directory.GetCurrentDirectory();
+#if DEBUG
+                FolderPath = Directory.Exists(DebugDefaultPath) ? DebugDefaultPath : FolderPath;
+#endif
+            }
+            folderLabel.Text = $"Selected: '{FolderPath}'";
+            if (!IsXslSelected)
+            {
+                CheckForXslt();
+            }
+        }
+
+        private void UpdateXsltChoice(string fileName)
+        {
+            xsltLabel.Text = IsXslSelected ? $"Selected: '{fileName}'" : "(no file selected)";
+            XsltPath = fileName;
+        }
+
+        private void CheckForXslt()
+        {
+            if (!Directory.Exists(FolderPath))
+            {
+                return;
+            }
+            var xslts = Directory.GetFiles(FolderPath, "*.xsl").ToList();
+            if (xslts.Count != 1)
+            {
+                return;
+            }
+            Log($"# Found one XSLT in working directory, preselecting automatically: '{xslts[0]}'");
+            IsXslSelected = true;
+            UpdateXsltChoice(xslts[0]);
+        }
+
+        private List<string> GetFilePaths(bool requireSingleGameSystem)
+        {
+            var gameSystemPaths = GetFilePathsForExtension(".gst");
+            if (requireSingleGameSystem && gameSystemPaths.Count != 1)
+            {
+                Log(
+                    "ERROR: Folder contains more than 1 game system file, or doesn't contain one. It can't be processed.");
+                return null;
+            }
+            var cataloguePaths = GetFilePathsForExtension(".cat");
+            return gameSystemPaths.Concat(cataloguePaths).ToList();
+        }
+
+        private List<string> GetFilePathsForExtension(string extension)
+        {
+            Log($"# Operating in '{FolderPath}'");
+            var paths = Directory.GetFiles(FolderPath, $"*{extension}").ToList();
+            var zipped = paths.Where(x => x.EndsWith("z")).ToList();
+            if (zipped.Count > 0)
+            {
+                Log(
+                    $"# {paths.Count} {extension}z file{(paths.Count == 1 ? "" : "s")} found. Zipped files aren't processed.");
+                foreach (var path in paths)
+                {
+                    Log($"#  * {path}");
+                }
+                paths = paths.Except(zipped).ToList();
+            }
+            Log($"# {paths.Count} {extension} file{(paths.Count == 1 ? "" : "s")} found{(paths.Count == 0 ? "." : ":")}");
+            foreach (var path in paths)
+            {
+                Log($"#  * {path}");
+            }
+            return paths;
+        }
+
+        private void Transform()
+        {
+            if (!IsXslSelected)
+            {
+                Log("ERROR: XSL file not selected.");
+                return;
+            }
+            try
+            {
+                Log($"# Loading XSLT from '{XsltPath}'...");
+                var transformer = new XslCompiledTransform();
+                transformer.Load(XsltPath);
+                Log("# Loaded.");
+                var paths = GetFilePaths(false);
+                Log("# Transforming...");
+                TransformCore(transformer, paths);
+                Log("# Completed operations.");
+            }
+            catch (XsltException e)
+            {
+                Log($"ERROR: In '{e.SourceUri}' (Line {e.LineNumber}:{e.LinePosition}):");
+                Log(e.Message);
+                Log("# Stopped processing. Please fix your stylesheet and try again.");
+            }
+            catch (Exception e)
+            {
+                Log($"ERROR: {e.Message}");
+                Log("# Stopped processing.");
+            }
+        }
+
+        private void TransformCore(XslCompiledTransform transformer, IEnumerable<string> paths)
+        {
+            foreach (var path in paths)
+            {
+                using (var stream = new MemoryStream())
+                {
+                    transformer.Transform(path, null, stream);
+                    using (var file = File.Open(path, FileMode.Create))
+                    {
+                        stream.WriteTo(file);
+                    }
+                    Log("# Transformed: " + path);
+                }
+            }
+        }
+
+        private void RegenerateIds()
+        {
+            if (!IsFolderSelected)
+            {
+                Log("WARNING: No folder selected: operating in execution directory.");
+            }
+            var paths = GetFilePaths(true);
+            if (paths == null)
+            {
+                return;
+            }
+            var reshaper = new Reshaper(paths[0], paths.Skip(1).ToList(), Log);
+            reshaper.RegenerateIds();
+            SaveXsltThreadSafe(reshaper);
+        }
+
+        private void SaveXsltThreadSafe(Reshaper reshaper)
+        {
+            if (InvokeRequired)
+            {
+                SaveXsltCallback d = SaveXslt;
+                Invoke(d, reshaper);
             }
             else
             {
-                folderLabel.Text = "(no folder selected)";
+                SaveXslt(reshaper);
             }
         }
 
-        private string getGstPath()
+        private void SaveXslt(Reshaper reshaper)
         {
-            var path = folderBrowserDialog.SelectedPath;
-#if DEBUG
-            path = debugDefaultPath;
-            log("DEBUG loading gst from: " + path);
-#endif
-            log("# Operating in:");
-            log(path);
-            /* searching for gsts */
-            List<string> gstStream = new List<string>(1);
-            log("# Following .gst files found:");
-            foreach (var s in Directory.EnumerateFiles(path, "*.gst"))
-            {
-                log("* " + s);
-                gstStream.Add(s);
-            }
-            if (gstStream.Count != 1)
-            {
-                log("Folder contains more than 1 game system file, or doesn't contain one. It can't be processed.");
-                return null;
-            }
-            return gstStream[0];
-        }
-
-        private List<string> getCatPaths()
-        {
-            var path = folderBrowserDialog.SelectedPath;
-#if DEBUG
-            path = debugDefaultPath;
-            log("DEBUG loading cats from: " + path);
-#endif
-            log("# Operating in:");
-            log(path);
-            /* searching for cats */
-            List<string> catStreams = new List<string>();
-            log("# Following .cat files found:");
-            foreach (var s in Directory.EnumerateFiles(path, "*.cat"))
-            {
-                log("* " + s);
-                catStreams.Add(s);
-            }
-            return catStreams;
-        }
-
-        private void startButton_Click(object sender, EventArgs e)
-        {
-#if DEBUG
-            folderSelected = true;
-#endif
-            if (!folderSelected)
-            {
-                log("No folder selected.");
-                return;
-            }
-#if DEBUG
-            folderSelected = false;
-#endif
-            string gstPath = getGstPath();
-            if (gstPath == null)
+            if (saveXslDialog.ShowDialog() != DialogResult.OK)
             {
                 return;
             }
-            Reshaper reshaper = new Reshaper(gstPath, getCatPaths(), log);
-            Task.Run(new Action(() => {
-                reshaper.RegenerateIds();
-                saveXsltThreadSafe(reshaper);
-            }));
+            var fileName = saveXslDialog.FileName;
+            Log("# Saving XSLT...");
+            File.WriteAllText(fileName, reshaper.ReshapingXSL.ToString());
+            Log($"# XSLT saved as '{fileName}'.");
         }
 
-        private void transformButton_Click(object sender, EventArgs e)
+        private delegate void SaveXsltCallback(Reshaper reshaper);
+
+        #region UI event handlers
+
+        private void folderSelectButton_Click(object sender, EventArgs e)
         {
-            if (!xslSelected)
-            {
-                log("XSL file not selected.");
-                return;
-            }
-            var task = Task.Run(new Action(() =>
-            {
-                var transformer = new System.Xml.Xsl.XslCompiledTransform();
-                transformer.Load(chooseXsltDialog.FileName);
-                var paths = getCatPaths();
-                paths.Add(getGstPath());
-                log("Transforming...");
-                foreach (var path in paths)
-                {
-                    using (var stream = new MemoryStream())
-                    {
-                        transformer.Transform(path, null, stream);
-                        using (FileStream file = File.Open(path, FileMode.Create))
-                        {
-                            stream.WriteTo(file);
-                        }
-                        log("# Transformed: " + path);
-                    }
-                }
-                log("Completed.");
-            }));
+            IsFolderSelected = folderBrowserDialog.ShowDialog() == DialogResult.OK;
+            UpdateFolderPath(folderBrowserDialog.SelectedPath);
         }
 
         private void loadXsltButton_Click(object sender, EventArgs e)
         {
-            xslSelected = chooseXsltDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK;
-            if (xslSelected)
+            IsXslSelected = chooseXsltDialog.ShowDialog() == DialogResult.OK;
+            UpdateXsltChoice(chooseXsltDialog.FileName);
+        }
+
+        private void startButton_Click(object sender, EventArgs e)
+        {
+            Task.Run(() => RegenerateIds());
+        }
+
+        private void transformButton_Click(object sender, EventArgs args)
+        {
+            Task.Run(() => Transform());
+        }
+
+        private void saveLogButton_Click(object sender, EventArgs e)
+        {
+            if (saveLogDialog.ShowDialog() == DialogResult.OK)
             {
-                xsltLabel.Text = "Selected: " + chooseXsltDialog.FileName;
-            }
-            else
-            {
-                xsltLabel.Text = "(no file selected)";
+                File.WriteAllText(saveLogDialog.FileName, logBox.Text);
             }
         }
 
         private void closeButton_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
-        private void saveLogButton_Click(object sender, EventArgs e)
-        {
-            if (saveLogDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                File.WriteAllText(saveLogDialog.FileName, logBox.Text);
-            }
-        }
+        #endregion
+
+        #region Logging
+
+        private delegate void AppendTextCallback(string text);
 
         // If the calling thread is different from the thread that 
         // created the TextBox control, this method creates a 
@@ -181,15 +255,15 @@ namespace BSReshaper
         // 
         // If the calling thread is the same as the thread that created 
         // the TextBox control, the Text property is set directly.  
-        private void log(string text)
+        private void Log(string text)
         {
             // InvokeRequired compares the thread ID of the 
             // calling thread to the thread ID of the creating thread. 
             // If these threads are different, it returns true. 
-            if (this.InvokeRequired)
+            if (InvokeRequired)
             {
-                AppendTextCallback d = new AppendTextCallback(log);
-                this.Invoke(d, new object[] { text });
+                AppendTextCallback callback = Log;
+                Invoke(callback, text);
             }
             else
             {
@@ -203,27 +277,6 @@ namespace BSReshaper
             logBox.AppendText("\r\n");
         }
 
-        private void saveXsltThreadSafe(Reshaper reshaper)
-        {
-            if (this.InvokeRequired)
-            {
-                SaveXsltCallback d = new SaveXsltCallback(saveXslt);
-                this.Invoke(d, new object[] { reshaper });
-            }
-            else
-            {
-                saveXslt(reshaper);
-            }
-        }
-
-        private void saveXslt(Reshaper reshaper)
-        {
-            if (saveXslDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                File.WriteAllText(saveXslDialog.FileName, reshaper.ReshapingXSL.ToString());
-                log("XSLT saved as:");
-                log(saveXslDialog.FileName);
-            }
-        }
+        #endregion
     }
 }

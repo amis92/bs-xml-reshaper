@@ -16,7 +16,7 @@ namespace BSReshaper
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new BSReshaper());
+            Application.Run(new BsReshaper());
         }
     }
 }

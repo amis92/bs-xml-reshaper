@@ -1,6 +1,6 @@
 ﻿namespace BSReshaper
 {
-    partial class BSReshaper
+    partial class BsReshaper
     {
         /// <summary>
         /// Required designer variable.
