@@ -175,25 +175,25 @@
             {
                 return;
             }
-            var reshaper = new Reshaper(paths[0], paths.Skip(1).ToList(), Log);
+            var reshaper = new IdReGenerator(paths[0], paths.Skip(1).ToList(), Log);
             reshaper.RegenerateIds();
             SaveXsltThreadSafe(reshaper);
         }
 
-        private void SaveXsltThreadSafe(Reshaper reshaper)
+        private void SaveXsltThreadSafe(IdReGenerator idReGenerator)
         {
             if (InvokeRequired)
             {
                 SaveXsltCallback d = SaveXslt;
-                Invoke(d, reshaper);
+                Invoke(d, idReGenerator);
             }
             else
             {
-                SaveXslt(reshaper);
+                SaveXslt(idReGenerator);
             }
         }
 
-        private void SaveXslt(Reshaper reshaper)
+        private void SaveXslt(IdReGenerator idReGenerator)
         {
             if (saveXslDialog.ShowDialog() != DialogResult.OK)
             {
@@ -201,11 +201,11 @@
             }
             var fileName = saveXslDialog.FileName;
             Log("# Saving XSLT...");
-            File.WriteAllText(fileName, reshaper.ReshapingXSL.ToString());
+            File.WriteAllText(fileName, idReGenerator.ReshapingXsl.ToString());
             Log($"# XSLT saved as '{fileName}'.");
         }
 
-        private delegate void SaveXsltCallback(Reshaper reshaper);
+        private delegate void SaveXsltCallback(IdReGenerator idReGenerator);
 
         #region UI event handlers
 
